@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Recipe Formatter</title>
+        <link rel="stylesheet" href="styles.css">
+        <link rel="icon" type="image/x-icon" href="icon.png">
+    </head>
+    <body>
+        <table style="margin: auto; border: none;">
+            <tr>
+                <td style="padding: 20px; border: none;" id="main-block">
+                    <div id="main-title">
+                        <h1 style="margin-top: 0px;">Comp 140 Recipe Formatter</h1>
+                        <p>Version 1.0 10/142025</p>
+                    </div>
+                    <br>
+                    <button onclick="about_clicked()">About</button>
+                    <br><br>
+                    <p>Paste your Python code here.</p>
+                    <textarea id="text-input" rows="12" cols="100"></textarea>
+                    <br><br>
+                    <button onclick="generate_recipe_clicked()">Generate Recipe</button>
+                    <br><br>
+                    <pre id="text-output" rows="12" cols="100"></pre>
+                    <br>
+                    <p>Disclaimer: version 1.0 was made in around 2 hours. It can help with initial formatting but it does not make a <br> complete recipe by any means. If this gets enough attention maybe I'll make a better version.</p>
+                    <br><br><br>
+                </td>
+            </tr>
+        </table>
+        <br><br>
+
+        <script src="script.js"></script>
+    </body>
+</html>
