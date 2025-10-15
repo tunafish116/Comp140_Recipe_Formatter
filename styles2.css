@@ -1,0 +1,13 @@
+body{
+    background-color:rgb(166, 217, 255);
+}
+
+td.content{
+    background-color: white;
+    padding: 15px;
+    
+}
+
+table{
+    border-spacing: 10px;
+}
