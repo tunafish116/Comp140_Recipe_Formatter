@@ -83,9 +83,9 @@ function generate_recipe_clicked() {
 
     variableBank = [...variableBank];
     variableBank = variableBank.join('|');
-    const italicize = new RegExp(`(${variableBank})`,'g');
+    const italicize = new RegExp(`([^\\w])(${variableBank})([^\\w])`,'g');
     
-    text = text.replace(italicize, '<i>$1</i>');
+    text = text.replace(italicize, '$1<i>$2</i>$3');
 
     text = text.replaceAll("{}", "an empty map");
     text = text.replaceAll("[]", "an empty sequence");
