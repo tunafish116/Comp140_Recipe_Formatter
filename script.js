@@ -33,23 +33,24 @@ function generate_recipe_clicked() {
     //  /([\w\[\]\(\)]+)\s?([\+-\\\*])=\s?([\w\[\]\(\)]+)/g
     //  
     text = text.replaceAll(/([\w\[\]\(\)_]+)\s?([\+-/\*])=\s?([\w\[\]\(\)]+)/g, "$1 = $1 $2 $3");
-    text = text.replaceAll(/(?<![<>=])=/g,"\u2190");
+    text = text.replaceAll(/(?<![<>=])=^=/g,"\u2190");
+    console.log(text);
     text = text.replaceAll("==","=");
     text = text.replaceAll("for ", "for each ");
     text = text.replaceAll("else, do", "else, then");
     text = text.replaceAll("elif ", "otherwise, if ")
     const appendRegex = /(\w+)\.append\(([^\)]+)\)/g;
     text = text.replaceAll(appendRegex, "append $2 to $1 ");
-    text = text.replaceAll(/len\((\w+)\)/g, "the length of $1 ");
+    text = text.replaceAll(/len\((\w+)\)/g, "the length of $1");
     text = text.replaceAll("**","to the power of");
     text = text.replaceAll(/sorted\(\s*(\w+)\s*\)/g,"$1 sorted in ascending alhpanumeric order");
 
 
     const subsequenceRegex = /(\w+)\[\s*([^:\]]*)\s*:\s*([^:\]]*)\s*\]/g;
     text = text.replaceAll(subsequenceRegex, (match, thing1, thing2, thing3) => {
-    const start = thing2.trim() || `the start of ${thing1}`;
-    const end = thing3.trim() || `the end of ${thing1}`;
-    return `a subsequence of ${thing1} from ${start} to ${end}`;
+      const start = thing2.trim()? `${thing1}<sub>`+thing2.trim()+`</sub>` : `the start of ${thing1}`;
+      const end = thing3.trim()? `${thing1}<sub>`+thing3.trim()+`</sub>` : `the end of ${thing1}`;
+      return `a subsequence of ${thing1} from ${start} to ${end}`;
     });
 
 
