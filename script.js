@@ -59,12 +59,20 @@ function generate_recipe_clicked() {
     text = text.replaceAll(
       /range\(\s*(-?\w+)\s*,\s*(-?\w+)\s*\)/g,
       (match, a, b) => {
+        let result = ``
         if(isNaN(a)){
-          return `the sequence ${a},${a + "+1"},${a + "+2"},...,${b}`;
+          result = `the sequence ${a},${a + "+1"},${a + "+2"},...,`;
         }else{
           a = parseInt(a);
-          return `the sequence ${a},${a + 1},${a + 2},...,${b}`;
+          result = `the sequence ${a},${a + 1},${a + 2},...,`;
         }
+        if(isNaN(b)){
+          result += `${b+"-1"}`;
+        }else{
+          b = parseInt(b);
+          result += `${b-1}`;
+        }
+        return result;
       }
     );
     text = text.replaceAll(/(\w+)\.pop\(\s*(\w+)\s*\)/g, "remove the element at index $2 from $1");
