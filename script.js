@@ -9,9 +9,8 @@ function generate_recipe_clicked() {
 
 
     const variableRegex = /\b(?:for|while)\s+(\w+)|\b(\w+)\s*=/g;
-    const variableBank = Set();
+    let variableBank = new Set();
     const parameterRegex = /def\s+(\w+)\s*\(([^)]*)\)/g;
-    const functions = [];
     let match;
 
     while ((match = variableRegex.exec(text)) !== null) {
@@ -20,13 +19,13 @@ function generate_recipe_clicked() {
     }
 
     while ((match = parameterRegex.exec(text)) !== null) {
-      const name = match[1];
       const params = match[2]
         .split(",")
         .map(p => p.trim())
         .filter(Boolean);
-      
-      functions.push({ name, params });
+      params.forEach(param => {
+        variableBank.add(param);
+      });
     }
     console.log(variableBank);
 
@@ -70,19 +69,12 @@ function generate_recipe_clicked() {
 
     text = text.replaceAll(/def\s+(\w+).+/g,"<b>Name:</b> $1");
     text = text.replaceAll(/(\w+)\[([^\]]+)\]/g, "$1<sub>$2</sub>");
-    const reserved = [
-    'break','class','continue','else','False','for','elif',
-    'def','None','return','True','while','random','len',
-    'append','push','pop','and','not','sub','range','print',
-    'the','sequence'
-    ];
-    const reservedPattern = reserved.join('|');
-    const regex = new RegExp(
-    `\\b(?!${reservedPattern}\\b)[a-zA-Z_$][a-zA-Z0-9_$]{2,}\\b`,
-    'g'
-    );
+
+    variableBank = [...variableBank];
+    variableBank = variableBank.join('|');
+    const italicize = new RegExp(`(${variableBank})`,'g');
     
-    text = text.replace(regex, '<i>$&</i>');
+    text = text.replace(italicize, '<i>$1</i>');
 
     text = text.replaceAll("{}", "an empty map");
     text = text.replaceAll("[]", "an empty sequence");
