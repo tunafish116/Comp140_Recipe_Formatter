@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="script.js"></script>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <table>
+            <tr>
+                <th style="width: 25%;"> </th>
+                <th style="width: 50%;"> </th>
+                <th style="width: 25%;"> </th>
+            </tr>
+            <tr>
+                <td>
+
+                </td>
+                <td class="content">
+                    <h1>Tips for using this tool:</h1>
+                    <button onclick="back_clicked()">Back</button>
+                    <pre>
+
+1. Don't access nested elements directly. This because you can't do double subscripts in recipies.
+Example:
+    instead of: 
+        grid[1][2] = 3
+    use:
+        grid[1] = row
+        row[2] = 3
+
+this also applies to nested dictionaries as well.
+
+
+
+2. Avoid nested parentheses. It breaks my regex, and I'm not making a full blown
+ interpreter for this. Also, it makes your code more readable anyways, which is
+ good when you want to translate it into a recipe.
+Example:
+    instead of:
+        list.append((tempF-32)*5/9)
+    use:
+        tempC = (tempF-32)*5/9
+        list.append(tempC)
+
+
+3. Why can't it write my inputs and outputs WAAAAAHH
+
+The point of this tool is to show how stupid certain aspects of recipes are.
+The fact a couple lines of replaceAll using regex can get you to 80% of a full
+recipe is proof that writing recipe steps is redundant work, and is basically
+porting your python program to another language. Inputs and outputs, however,
+actually require brainpower to do, and to automate that task would require
+something like ChatGPT. This aspect of recipies I believe can at least be 
+justified in the name of learning. This is not a tool for avoiding learning.
+So, sorry you'll still have to write your inputs and outputs yourself :3
+                    </pre>
+                </td>
+                <td>
+
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>

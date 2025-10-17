@@ -7,25 +7,35 @@ function generate_recipe_clicked() {
     let textOutput = document.getElementById("text-output");
 
 
-    text = text.replaceAll(/(\w+)\[([^\]]+)\]/g, "$1<sub>$2</sub>");
 
-    const reserved = [
-    'break','class','continue','else','False','for','if','elif',
-    'def','in','None','return','True','while','random','len','as',
-    'append','push','pop','and','not','or','sub','range'
-    ];
-    const reservedPattern = reserved.join('|');
-    const regex = new RegExp(
-    `\\b(?!${reservedPattern}\\b)[a-zA-Z_$][a-zA-Z0-9_$]*\\b`,
-    'g'
-    );
-    
-    text = text.replace(regex, '<u>$&</u>');
+    const variableRegex = /\b(?:for|while)\s+(\w+)|\b(\w+)\s*=/g;
+    const variableBank = Set();
+    const parameterRegex = /def\s+(\w+)\s*\(([^)]*)\)/g;
+    const functions = [];
+    let match;
+
+    while ((match = variableRegex.exec(text)) !== null) {
+      // one of the capture groups will be defined
+      variableBank.add(match[1] || match[2]);
+    }
+
+    while ((match = parameterRegex.exec(text)) !== null) {
+      const name = match[1];
+      const params = match[2]
+        .split(",")
+        .map(p => p.trim())
+        .filter(Boolean);
+      
+      functions.push({ name, params });
+    }
+    console.log(variableBank);
 
 
-
-    text = text.replaceAll(/(\w+)\s+([\+|-|\\|\*])= (\w+)/g, "$1 = $1 $2 $3");
-    text = text.replaceAll("=","\u2190");
+    //  /([\w\[\]\(\)]+)\s?([\+-\\\*])=\s?([\w\[\]\(\)]+)/g
+    //  
+    text = text.replaceAll(/([\w\[\]\(\)_]+)\s?([\+-/\*])=\s?([\w\[\]\(\)]+)/g, "$1 = $1 $2 $3");
+    text = text.replaceAll(/(?<![<>=])=/g,"\u2190");
+    text = text.replaceAll("==","=");
     text = text.replaceAll("for ", "for each ");
     text = text.replaceAll("else, do", "else, then");
     text = text.replaceAll("elif ", "otherwise, if ")
@@ -38,16 +48,48 @@ function generate_recipe_clicked() {
     text = text.replaceAll(subsequenceRegex, (match, thing1, thing2, thing3) => {
     const start = thing2.trim() || `the start of ${thing1}`;
     const end = thing3.trim() || `the end of ${thing1}`;
-    return `subsequence of ${thing1} from ${start} to ${end}`;
+    return `a subsequence of ${thing1} from ${start} to ${end}`;
     });
+
+
+    text = text.replaceAll(/random.random\(\)/g, "a random real number >= 0 and < 1, chosen with a uniform distribution");
+    text = text.replaceAll(/random.randint\(\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/g, "a random integer >= $1 and <= $2 chosen with uniform distribution");
+    text = text.replaceAll(/range\(\s*(\w+)\s*\)/g, "the sequence 0,1,2,...,$1")
+    text = text.replaceAll(
+      /range\(\s*(-?\w+)\s*,\s*(-?\w+)\s*\)/g,
+      (match, a, b) => {
+        if(isNaN(a)){
+          return `the sequence ${a},${a + "+1"},${a + "+2"},...,${b}`;
+        }else{
+          a = parseInt(a);
+          return `the sequence ${a},${a + 1},${a + 2},...,${b}`;
+        }
+      }
+    );
+    text = text.replaceAll(/(\w+)\.pop\(\s*(\w+)\s*\)/g, "remove the element at index $2 from $1");
+
+    text = text.replaceAll(/def\s+(\w+).+/g,"<b>Name:</b> $1");
+    text = text.replaceAll(/(\w+)\[([^\]]+)\]/g, "$1<sub>$2</sub>");
+    const reserved = [
+    'break','class','continue','else','False','for','elif',
+    'def','None','return','True','while','random','len',
+    'append','push','pop','and','not','sub','range','print',
+    'the','sequence'
+    ];
+    const reservedPattern = reserved.join('|');
+    const regex = new RegExp(
+    `\\b(?!${reservedPattern}\\b)[a-zA-Z_$][a-zA-Z0-9_$]{2,}\\b`,
+    'g'
+    );
+    
+    text = text.replace(regex, '<i>$&</i>');
 
     text = text.replaceAll("{}", "an empty map");
     text = text.replaceAll("[]", "an empty sequence");
 
 
-    text = text.replaceAll(/:\s?\n/g, ", do\n");
-    text = text.replaceAll("def ","Name: ");
 
+    text = text.replaceAll(/((for|while|if|elif|else).*):\s*\n/g, "$1, do\n");
 
 
 
@@ -70,7 +112,10 @@ function generate_recipe_clicked() {
  * word starts with a letter
  * any word not defined not defined in python syntax is underlined
  * 
- * 
+ * ways for creating new variables
+ * 1. parameter
+ * 2. <--
+ * 3. for, while
  * 
  * 
  * 
@@ -95,4 +140,12 @@ function clickLink(url){
 
 function back_to_safety_clicked(){
   clickLink("https://x.com/tecariowolf");
+}
+
+function back_clicked(){
+  clickLink("index.html");
+}
+
+function tips_clicked(){
+  clickLink("tips.html");
 }
