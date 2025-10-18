@@ -1,7 +1,6 @@
 
 
 
-
 function generate_recipe_clicked() {
     let text = document.getElementById("text-input").value;
     let textOutput = document.getElementById("text-output");
@@ -33,9 +32,8 @@ function generate_recipe_clicked() {
     //  /([\w\[\]\(\)]+)\s?([\+-\\\*])=\s?([\w\[\]\(\)]+)/g
     //  
     text = text.replaceAll(/([\w\[\]\(\)_]+)\s?([\+-/\*])=\s?([\w\[\]\(\)]+)/g, "$1 = $1 $2 $3");
-    text = text.replaceAll(/(?<![<>=])=^=/g,"\u2190");
-    console.log(text);
-    text = text.replaceAll("==","=");
+    text = text.replaceAll("=","\u2190");
+    text = text.replaceAll("\u2190\u2190","=");
     text = text.replaceAll("for ", "for each ");
     text = text.replaceAll("else, do", "else, then");
     text = text.replaceAll("elif ", "otherwise, if ")
@@ -91,6 +89,17 @@ function generate_recipe_clicked() {
     text = text.replaceAll("[]", "an empty sequence");
 
 
+    // class stuff
+    let classNames = /class\s+(\w+):/g.exec(text);
+    let className = classNames? classNames[1]:null;
+    if(className){
+      text = text.replace(/__init__/,"Initialize"+className);
+      className = className[0].toLowerCase()+className.slice(1);
+      text = text.replaceAll(/<i>self<\/i>\._(\w+)/g, "<i>self</i>.<i>$1</i>");
+      text = text.replaceAll("<i>self</i>","<i>"+className+"</i>");
+    }
+
+
 
     text = text.replaceAll(/((for|while|if|elif|else).*):\s*\n/g, "$1, do\n");
 
@@ -120,11 +129,23 @@ function generate_recipe_clicked() {
  * 2. <--
  * 3. for, while
  * 
+ * For classes:
+ * find and store class name: class ******
+ * replace __init___ with Initialize*className*
+ * within a class, if variables start with _, delete it. Actually, just delete all _var
  * 
  * 
  * 
  */ 
 
+    console.log(text);
+    textOutput.innerHTML = text;
+}
+
+function unindent_clicked() {
+    let textOutput = document.getElementById("text-output");
+    let text = textOutput.innerHTML;
+    text = text.replaceAll(/\n\s{4}/g,"\n");
     console.log(text);
     textOutput.innerHTML = text;
 }
