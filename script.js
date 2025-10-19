@@ -102,7 +102,7 @@ function generate_recipe_clicked() {
     if(className){
       text = text.replace(/__init__/,"Initialize"+className);
       className = className[0].toLowerCase()+className.slice(1);
-      text = text.replaceAll(/<i>self<\/i>\._(\w+)/g, "<i>self</i>.<i>$1</i>");
+      text = text.replaceAll(/<i>self<\/i>\._?(\w+)/g, "<i>self</i>.<i>$1</i>");
       text = text.replaceAll("<i>self</i>","<i>"+className+"</i>");
     }
 
