@@ -76,7 +76,6 @@ function generate_recipe_clicked() {
     );
     text = text.replaceAll(/(\w+)\.pop\(\s*(\w+)\s*\)/g, "remove the element at index $2 from $1");
 
-    text = text.replaceAll(/def\s+(\w+).+/g,"<b>Name:</b> $1");
     text = text.replaceAll(/(\w+)\[([^\]]+)\]/g, "$1<sub>$2</sub>");
 
     variableBank = [...variableBank];
@@ -84,6 +83,14 @@ function generate_recipe_clicked() {
     const italicize = new RegExp(`([^\\w])(${variableBank})([^\\w])`,'g');
     
     text = text.replace(italicize, '$1<i>$2</i>$3');
+    // experimental code below for later versions.
+    //text = text.replaceAll(/def\s+(\w+).+/g,"<hr style=\"border-color:black\"><b>Name:</b> $1<hr style=\"border-color:black\">");
+    //text = text.replaceAll("*","\u00d7");
+    //add ; to the end of each line that isn't class, if, else, elif, while, for
+
+    text = text.replaceAll(/def\s+(\w+).+/g,"<b>Name:</b> $1");
+    text = text.replaceAll("return ","<b>return</b> ");
+    
 
     text = text.replaceAll("{}", "an empty map");
     text = text.replaceAll("[]", "an empty sequence");
