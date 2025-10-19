@@ -40,7 +40,7 @@ function generate_recipe_clicked() {
     const appendRegex = /(\w+)\.append\(([^\)]+)\)/g;
     text = text.replaceAll(appendRegex, "append $2 to $1 ");
     text = text.replaceAll(/len\((\w+)\)/g, "the length of $1");
-    text = text.replaceAll("**","to the power of");
+    text = text.replaceAll(/\s*\*\*\s*/g," to the power of ");
     text = text.replaceAll(/sorted\(\s*(\w+)\s*\)/g,"$1 sorted in ascending alhpanumeric order");
 
 
