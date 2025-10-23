@@ -31,7 +31,7 @@ function generate_recipe_clicked() {
 
     //  /([\w\[\]\(\)]+)\s?([\+-\\\*])=\s?([\w\[\]\(\)]+)/g
     //  
-    text = text.replaceAll(/([\w\[\]\(\)_]+)\s?([\+-/\*])=\s?([\w\[\]\(\)]+)/g, "$1 = $1 $2 $3");
+    text = text.replaceAll(/([\w\[\]\(\)_]+)\s?([\+-/\*])=\s?("?[\w\[\]\(\)]+"?)/g, "$1 = $1 $2 $3");
     text = text.replaceAll(/\s*!=\s*/g," is not equal to ");
     text = text.replaceAll("=","\u2190");
     text = text.replaceAll("\u2190\u2190","=");
