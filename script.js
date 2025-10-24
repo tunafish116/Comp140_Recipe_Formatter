@@ -29,16 +29,16 @@ function generate_recipe_clicked() {
     console.log(variableBank);
 
 
-    //  /([\w\[\]\(\)]+)\s?([\+-\\\*])=\s?([\w\[\]\(\)]+)/g
-    //  
+    //  /([\w\[\]\(\)]+)\s?([\+-\\\*])=\s?([\w\[\]\(\)]+)/g 
+    text = text.replaceAll("for ", "for each ");
+    text = text.replaceAll("elif ", "otherwise if ");
+    text = text.replaceAll(/(for each|while)(.*):\s*\n/g, "<b>$1</b>$2 <b>do</b>\n");
+    text = text.replaceAll(/(if|otherwise if|else)(.*):\s*\n/g, "<b>$1</b>$2 <b>then</b>\n");
     text = text.replaceAll(/([\w\[\]\(\)_]+)\s?([\+-/\*])=\s?("?[\w\[\]\(\)]+"?)/g, "$1 = $1 $2 $3");
     text = text.replaceAll(/\s*!=\s*/g," is not equal to ");
     text = text.replaceAll("=","\u2190");
     text = text.replaceAll("\u2190\u2190","=");
     text = text.replaceAll(/([<>])\u2190/g,"$1=");
-    text = text.replaceAll("for ", "for each ");
-    text = text.replaceAll("else, do", "else, then");
-    text = text.replaceAll("elif ", "otherwise, if ")
     const appendRegex = /(\w+)\.append\(([^\)]+)\)/g;
     text = text.replaceAll(appendRegex, "append $2 to $1 ");
     text = text.replaceAll(/len\((\w+)\)/g, "the length of $1");
@@ -107,6 +107,13 @@ function generate_recipe_clicked() {
     text = text.replaceAll("{}", "an empty map");
     text = text.replaceAll("[]", "an empty sequence");
 
+    // explicit list re-format
+    text = text.replaceAll(/(^\w|\s)\[(.+)\]/g,"$1$2");
+
+    // TODO maybe? detect maps and 
+    // add a new correspondence x ↦ y to the map z
+
+
 
     // class stuff
     let classNames = /class\s+(\w+):/g.exec(text);
@@ -120,7 +127,7 @@ function generate_recipe_clicked() {
 
 
 
-    text = text.replaceAll(/((for|while|if|elif|else).*):\s*\n/g, "$1, do\n");
+
 
 
 
@@ -164,7 +171,10 @@ function generate_recipe_clicked() {
 function unindent_clicked() {
     let textOutput = document.getElementById("text-output");
     let text = textOutput.innerHTML;
-    text = text.replaceAll(/\n\s{4}/g,"\n");
+    // a little bit of jank code to fix consecutive line breaks
+    text = text.replaceAll("\n\n","\n:\n");
+    text = text.replaceAll(/\n\s{4}/g,"\n"); // this is the one that actually un-indents
+    text = text.replaceAll("\n:\n","\n\n");
     console.log(text);
     textOutput.innerHTML = text;
 }
